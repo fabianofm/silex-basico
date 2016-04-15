@@ -1,0 +1,44 @@
+
+{% extends 'base.twig' %}
+
+{% block body %}
+
+
+  <h2>Tabela de estimativa de consumo médio mensal de eletrodomésticos de acordo com um uso hipotético</h2>
+  <p>Para calcular o consumo médio [kWh] de um equipamento, de acordo com o seu real hábito de uso, procure
+    a potência do aparelho no manual do fabricante. Em seguida, faça o cálculo da seguinte forma:</p>
+<p>Consumo médio do equipamento [kWh] = Potência do equipamento [W]/1000 x Número de horas utilizadas x Número de dias de uso ao mês<br />
+Para achar o custo mensal em reais, multiplique o consumo médio em kWh pelo valor da tarifa cobrada pela concessionária local.</p>
+<div class="table-responsive">
+
+
+  <table class="table table-striped table-fixed-header" id="mytable">
+    <thead class="header">
+      <tr>
+        <th>Aparelhos Elétricos</th>
+        <th>Dias Estimados(Uso/Mês)</th>
+        <th>Média(Utilização/Dia)</th>
+        <th>Consumo Médio Mensal(KWh)</th>
+        <th>Valor R$</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set preco_unit = 0.82630 %}
+        {% for info in dados %}
+        <tr class="info" title="{{info.id}}">
+          <td>{{info.aparelho}}</td>
+          <td>{{info.uso_mes}}</td>
+          <td>{{info.uso_dia}}</td>
+          <td>{{info.mensal_kwh}}</td>
+
+          <td>R$ {% set valor = info.mensal_kwh|replace({"," : "."}) * preco_unit %} {{valor|number_format(2) }}</td>
+        </tr>
+        {%  endfor %}
+
+    </tbody>
+  </table>
+
+</div>
+
+
+{% endblock %}

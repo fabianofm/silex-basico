@@ -1,0 +1,35 @@
+{% extends 'base.twig' %}
+{% import "forms.html" as forms %}
+
+{% block body %}
+
+<form action="publicar" method="POST" class="form-horizontal" role="form">
+<div class="form-group">
+  <label class="control-label col-sm-2" for="titulo">Aparelho:</label>
+    <div class="col-sm-10">
+      {{ forms.input('aparelho',null,null,100,'form-control') }}
+    </div>
+
+  <label class="control-label col-sm-2" for="uso_mes">Dias Estimados(Uso/Mês):</label>
+    <div class="col-sm-10">
+      {{ forms.input('uso_mes',null,null,80,'form-control') }}
+    </div>
+  </div>
+<div class="form-group">
+  <label class="control-label col-sm-2" for="uso_dia">Média(Utilização/Dia):</label>
+    <div class="col-sm-10">
+      {{ forms.input('uso_dia',null,null,50,'form-control') }}
+    </div>
+  <label class="control-label col-sm-2" for="mensal_kwh">Consumo Médio Mensal(KWh):</label>
+    <div class="col-sm-10">
+      {{ forms.input('mensal_kwh',null,null,50,'form-control') }}
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      {{ forms.input('submit','Publicar','submit',null,'btn btn-default') }}
+    </div>
+</div>
+</form>
+
+{% endblock %}

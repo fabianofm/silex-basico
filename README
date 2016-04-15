@@ -1,0 +1,5 @@
+SILEX Básico
+---------------------
+	* O arquivo 'base.twig' usa Bootstrap para formatação básica. 
+	* consumo.sql - Estrutura da tabela `estimativa` e DML INSERT dos dados extraídos.
+
