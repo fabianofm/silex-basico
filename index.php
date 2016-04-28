@@ -5,53 +5,49 @@ use Symfony\Component\HttpFoundation\Request;
 
 $app = new Silex\Application();
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__ ."/frontend",));
+  'twig.path' => __DIR__ ."/frontend",));
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+  'db.options' => array(
+      'driver' => 'pdo_mysql',
+      'host' => 'localhost',
+      'dbname' => 'consumo',
+      'user' => 'root',
+      'password' => '123',
+      'charset' => 'utf8',
+  ),
+));
 
-//PDO - mysql
-$data_source_name = "mysql:dbname=consumo;host=localhost;charset=utf8";
-try {
-  $database_handle = new PDO($data_source_name, "login","senha", array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
-} catch (Exception $exc) {
-  $exc->getMessage();
-}
-
-//Home
+//Home - redireciona para a lista.
 $app->get("/", function() use($app){
   return $app->redirect('listar');
 });
 
-
-$app->get("/listar", function() use($app,$database_handle){
-
-    $statement_handle = $database_handle->prepare("SELECT id,aparelho,uso_mes,uso_dia,mensal_kwh
-                                                    FROM estimativa
-                                                    ORDER BY id DESC");
-    $statement_handle->execute();
-    $response = $statement_handle->fetchAll(PDO::FETCH_ASSOC);
+$app->get("/listar", function() use($app){
+  $sql = "SELECT id,aparelho,uso_mes,uso_dia,mensal_kwh
+          FROM estimativa
+          ORDER BY id DESC";
+  $response = $app['db']->fetchAll($sql);
 
   return $app[twig]->render("lista.twig", array('dados' => $response, ));
 });
 
 $app->match('/publicar', function(Request $request) use($app, $database_handle){
 
-    if($request->getContent()){
+  if($request->getContent()){
 
-        foreach ($request->request->all() as $key => $value) {
-          if($key == "submit") continue;
-          $post[$key] .= $value;
-        }
-
-       $statement_handle = $database_handle->prepare("INSERT INTO estimativa (aparelho,uso_mes,uso_dia,mensal_kwh)
-                                                        VALUES (:aparelho,:uso_mes,:uso_dia,:mensal_kwh)");
-       $statement_handle->execute($post);
-
-       return $app->redirect('listar');
+    foreach ($request->request->all() as $key => $value) {
+      if($key == "submit") continue;
+      $post[$key] .= $value;
     }
 
-    return $app[twig]->render('publicar.twig');
+   $app['db']->insert('estimativa', $post);
+
+   return $app->redirect('listar');
+  }
+
+  return $app[twig]->render('publicar.twig');
 
 });
 
-
-$app[debug] = true;
+//$app[debug] = true;
 $app->run();
