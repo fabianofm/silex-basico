@@ -31,7 +31,7 @@ $app->get("/listar", function() use($app){
   return $app[twig]->render("lista.twig", array('dados' => $response, ));
 });
 
-$app->match('/publicar', function(Request $request) use($app, $database_handle){
+$app->match('/publicar', function(Request $request) use($app){
 
   if($request->getContent()){
 
